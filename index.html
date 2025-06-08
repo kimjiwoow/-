@@ -111,13 +111,23 @@
         } else if (step === 2) {
           box.textContent = "나 별난별과 함께 떠나볼까?";
         } else if (step === 3) {
-          window.location.href = " https://kimjiwoow.github.io/write-/"; // 페이지 이동
+          // 마지막 단계에서만 페이지 이동
+          window.location.href = "https://kimjiwoow.github.io/write-/"; // 실제 링크로 수정
           return;
         }
 
         box.style.opacity = 1; // 텍스트 변경 후 opacity 복원
       }, 300); // 애니메이션 시간
     }
+
+    function skip() {
+      // SKIP 버튼 클릭 시 바로 페이지로 이동
+      window.location.href = "https://kimjiwoow.github.io/write-/"; // 실제 링크로 수정
+    }
+  </script>
+</body>
+</html>
+
 
     function skip() {
       window.location.href = " https://kimjiwoow.github.io/write-/"; // SKIP 버튼 클릭 시 페이지 이동
