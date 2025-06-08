@@ -25,7 +25,6 @@
       justify-content: center;
       align-items: center;
       padding: 30px;
-
     }
 
     .character-image {
@@ -89,40 +88,17 @@
   <div class="container">
     <img class="character-image" src="https://i.imgur.com/YgP1zqJ.png" alt="별난별이">
     <div id="messageBox" class="text-box">안녕~ 나는 별나라에서 온 별난별이야.</div>
-
+    
     <!-- 왼쪽: SKIP 버튼 -->
-    <button class="btn-skip" onclick="skip()">SKIP</button>
-
+    <button class="btn-skip" onclick="goToNextPage()">SKIP</button>
+    
     <!-- 오른쪽: 다음 버튼 -->
-    <button id="nextBtn" class="btn-next" onclick="advance()">다음</button>
+    <button id="nextBtn" class="btn-next" onclick="goToNextPage()">다음</button>
   </div>
-
+  
   <script>
-    let step = 0;
-
-    function advance() {
-      const box = document.getElementById("messageBox");
-
-      box.style.opacity = 0;
-
-      setTimeout(() => {
-        step++;
-
-        if (step === 1) {
-          box.textContent = "너의 운명의 별을 따다주러 왔어.";
-        } else if (step === 2) {
-          box.textContent = "나 별난별과 함께 떠나볼까?";
-        } else if (step === 3) {
-          window.location.href = "소개글.html"; // 실제 파일 이름에 맞게 수정
-          return;
-        }
-
-        box.style.opacity = 1;
-      }, 300);
-    }
-
-    function skip() {
-      window.location.href = "소개글.html"; // 실제 파일 이름에 맞게 수정
+    function goToNextPage() {
+      window.location.href = "https://kimjiwoow.github.io/write-/";
     }
   </script>
 </body>
