@@ -90,15 +90,37 @@
     <div id="messageBox" class="text-box">안녕~ 나는 별나라에서 온 별난별이야.</div>
     
     <!-- 왼쪽: SKIP 버튼 -->
-    <button class="btn-skip" onclick="goToNextPage()">SKIP</button>
+    <button class="btn-skip" onclick="skip()">SKIP</button>
     
     <!-- 오른쪽: 다음 버튼 -->
-    <button id="nextBtn" class="btn-next" onclick="goToNextPage()">다음</button>
+    <button id="nextBtn" class="btn-next" onclick="advance()">다음</button>
   </div>
   
   <script>
-    function goToNextPage() {
-      window.location.href = "https://kimjiwoow.github.io/write-/";
+    let step = 0; // 처음 단계는 0부터 시작
+
+    function advance() {
+      const box = document.getElementById("messageBox");
+      box.style.opacity = 0;
+
+      setTimeout(() => {
+        step++; // 단계 증가
+
+        if (step === 1) {
+          box.textContent = "너의 운명의 별을 따다주러 왔어.";
+        } else if (step === 2) {
+          box.textContent = "나 별난별과 함께 떠나볼까?";
+        } else if (step === 3) {
+          window.location.href = " https://kimjiwoow.github.io/write-/"; // 페이지 이동
+          return;
+        }
+
+        box.style.opacity = 1; // 텍스트 변경 후 opacity 복원
+      }, 300); // 애니메이션 시간
+    }
+
+    function skip() {
+      window.location.href = " https://kimjiwoow.github.io/write-/"; // SKIP 버튼 클릭 시 페이지 이동
     }
   </script>
 </body>
