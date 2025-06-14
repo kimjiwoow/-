@@ -1,9 +1,8 @@
-<!-- ✅ 최종 HTML 예시 (첫 페이지용) -->
 <!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>운명의 별을 따다 줄게</title>
+  <title>별난별이 등장</title>
   <style>
     body {
       margin: 0;
@@ -15,6 +14,7 @@
       align-items: center;
       justify-content: center;
     }
+
     .container {
       position: relative;
       width: 100%;
@@ -24,13 +24,15 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      padding: 30px;
+      padding: 20px;
     }
+
     .character-image {
-      width: 290px;
+      width: 280px;
       height: auto;
-      margin-bottom: 2px;
+      margin-bottom: 30px;
     }
+
     .text-box {
       background-color: #fff;
       border-radius: 30px;
@@ -38,30 +40,48 @@
       font-size: 18px;
       color: #333;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      margin-bottom: 50px;
+      margin-bottom: 60px;
       text-align: center;
+      transition: opacity 0.3s ease;
     }
-    .btn-skip, .btn-next {
+
+    .btn-skip {
       position: absolute;
+      left: 80px;
       bottom: 180px;
+      background: none;
+      border: none;
+      color: #7265a1;
       font-size: 14px;
       font-weight: 600;
       cursor: pointer;
       transition: all 0.3s ease;
       padding: 8px 20px;
       min-width: 72px;
-      border: none;
     }
-    .btn-skip {
-      left: 80px;
-      background: none;
-      color: #7265a1;
+
+    .btn-skip:hover {
+      opacity: 0.8;
     }
+
     .btn-next {
+      position: absolute;
       right: 80px;
+      bottom: 180px;
       background-color: #2d1b69;
       color: white;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      padding: 8px 20px;
       border-radius: 25px;
+      min-width: 72px;
+      border: none;
+    }
+
+    .btn-next:hover {
+      opacity: 0.9;
     }
   </style>
 </head>
@@ -69,44 +89,63 @@
   <div class="container">
     <img class="character-image" src="https://i.imgur.com/YgP1zqJ.png" alt="별난별이">
     <div id="messageBox" class="text-box">안녕~ 나는 별나라에서 온 별난별이야.</div>
-    <button class="btn-skip" onclick="logAndSkip()">SKIP</button>
-    <button class="btn-next" onclick="logAndAdvance()">다음</button>
+
+    <button class="btn-skip" onclick="handleClick('skip')">SKIP</button>
+    <button id="nextBtn" class="btn-next" onclick="advance()">다음</button>
   </div>
 
- <script>
-function logIntroAction(actionType) {
-  const now = new Date();
-  const payload = {
-    introLog: {
-      date: now.toISOString().split('T')[0],
-      time: now.toTimeString().split(' ')[0],
-      sessionId: 'session_' + now.getTime(),
-      action: actionType  // 'skip' 또는 'next'
+  <script>
+    let step = 0;
+    const sessionId = 'session_' + Date.now();
+    const nextPageUrl = 'https://kimjiwoow.github.io/write-/'; // 여기에 실제 이동할 페이지 파일명 넣기
+    const webAppUrl = 'https://docs.google.com/spreadsheets/d/1Xf8cWpB-tPn55kubvt3ozcENL734mKDbQftPl-epO74/edit?gid=0#gid=0'; // 🔁 네 웹앱 배포 주소로 수정
+
+    function logIntroAction(actionType) {
+      const now = new Date();
+      const payload = {
+        introLog: {
+          date: now.toISOString().split('T')[0],
+          time: now.toTimeString().split(' ')[0],
+          sessionId: sessionId,
+          action: actionType
+        }
+      };
+
+      return fetch(webAppUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+      });
     }
-  };
 
-  fetch("https://script.google.com/macros/s/AKfycbwOHXIVYOCOj6_ZZOMcHitkIZqrjtZIJYQqrldajjiRoq8fHV_feS1cxKWRxwE8WOY_YQ/exec", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(payload)
-  }).then(() => {
-    window.location.href = "https://kimjiwoow.github.io/write-/";
-  }).catch((err) => {
-    console.error("Intro 전송 실패", err);
-    window.location.href = "https://kimjiwoow.github.io/write-/";
-  });
-}
+    function handleClick(type) {
+      logIntroAction(type).finally(() => {
+        window.location.href = nextPageUrl;
+      });
+    }
 
-function skip() {
-  logIntroAction("skip");
-}
-function advance() {
-  logIntroAction("next");
-}
-</script>
+    function advance() {
+      const box = document.getElementById("messageBox");
 
+      box.style.opacity = 0;
+
+      setTimeout(() => {
+        step++;
+
+        if (step === 1) {
+          box.textContent = "너의 운명의 별을 따다주러 왔어";
+        } else if (step === 2) {
+          box.textContent = "나 별난별과 함께 떠나볼까?";
+        } else if (step === 3) {
+          handleClick('next');
+          return;
+        }
+
+        box.style.opacity = 1;
+      }, 300);
+    }
   </script>
 </body>
 </html>
