@@ -73,50 +73,40 @@
     <button class="btn-next" onclick="logAndAdvance()">다음</button>
   </div>
 
-  <script>
-    let step = 0;
-    const sessionId = 'session_' + Date.now();
-    const WEBAPP_URL = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec'; // 변경 필요
-
-    function logIntroPage(actionType) {
-      const logData = {
-        sessionId,
-        action: actionType,
-        time: new Date().toLocaleTimeString('ko-KR'),
-        date: new Date().toLocaleDateString('ko-KR'),
-        timeFromStart: 0
-      };
-
-      fetch(WEBAPP_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ introLog: logData })
-      });
+ <script>
+function logIntroAction(actionType) {
+  const now = new Date();
+  const payload = {
+    introLog: {
+      date: now.toISOString().split('T')[0],
+      time: now.toTimeString().split(' ')[0],
+      sessionId: 'session_' + now.getTime(),
+      action: actionType  // 'skip' 또는 'next'
     }
+  };
 
-    function logAndSkip() {
-      logIntroPage("SKIP");
-      window.location.href = "https://kimjiwoow.github.io/write-/";
-    }
+  fetch("https://script.google.com/macros/s/인트로용-웹앱-URL/exec", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(payload)
+  }).then(() => {
+    window.location.href = "https://kimjiwoow.github.io/write-/";
+  }).catch((err) => {
+    console.error("Intro 전송 실패", err);
+    window.location.href = "https://kimjiwoow.github.io/write-/";
+  });
+}
 
-    function logAndAdvance() {
-      const box = document.getElementById("messageBox");
-      box.style.opacity = 0;
-      setTimeout(() => {
-        step++;
-        if (step === 1) {
-          box.textContent = "너의 운명의 별을 따다주러 왔어.";
-        } else if (step === 2) {
-          box.textContent = "나 별난별과 함께 떠나볼까?";
-        } else if (step === 3) {
-          logIntroPage("NEXT_LAST");
-          window.location.href = "https://kimjiwoow.github.io/write-/";
-          return;
-        }
-        box.style.opacity = 1;
-      }, 300);
-    }
+function skip() {
+  logIntroAction("skip");
+}
+function advance() {
+  logIntroAction("next");
+}
+</script>
+
   </script>
 </body>
 </html>
