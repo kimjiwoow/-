@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>별난별이 등장</title>
+  <title>운명의 별을 따다 줄게</title>
   <style>
     body {
       margin: 0;
@@ -24,13 +24,13 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      padding: 20px;
+      padding: 30px;
     }
 
     .character-image {
-      width: 280px;
+      width: 290px;
       height: auto;
-      margin-bottom: 30px;
+      margin-bottom: 2px;
     }
 
     .text-box {
@@ -40,9 +40,8 @@
       font-size: 18px;
       color: #333;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      margin-bottom: 60px;
+      margin-bottom: 50px;
       text-align: center;
-      transition: opacity 0.3s ease;
     }
 
     .btn-skip {
@@ -89,63 +88,44 @@
   <div class="container">
     <img class="character-image" src="https://i.imgur.com/YgP1zqJ.png" alt="별난별이">
     <div id="messageBox" class="text-box">안녕~ 나는 별나라에서 온 별난별이야.</div>
-
-    <button class="btn-skip" onclick="handleClick('skip')">SKIP</button>
+    
+    <!-- 왼쪽: SKIP 버튼 -->
+    <button class="btn-skip" onclick="skip()">SKIP</button>
+    
+    <!-- 오른쪽: 다음 버튼 -->
     <button id="nextBtn" class="btn-next" onclick="advance()">다음</button>
   </div>
-
+  
   <script>
-    let step = 0;
-    const sessionId = 'session_' + Date.now();
-    const nextPageUrl = 'https://kimjiwoow.github.io/write-/'; // 여기에 실제 이동할 페이지 파일명 넣기
-    const webAppUrl = 'https://docs.google.com/spreadsheets/d/1Xf8cWpB-tPn55kubvt3ozcENL734mKDbQftPl-epO74/edit?gid=0#gid=0'; // 🔁 네 웹앱 배포 주소로 수정
-
-    function logIntroAction(actionType) {
-      const now = new Date();
-      const payload = {
-        introLog: {
-          date: now.toISOString().split('T')[0],
-          time: now.toTimeString().split(' ')[0],
-          sessionId: sessionId,
-          action: actionType
-        }
-      };
-
-      return fetch(webAppUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(payload)
-      });
-    }
-
-    function handleClick(type) {
-      logIntroAction(type).finally(() => {
-        window.location.href = nextPageUrl;
-      });
-    }
+    let step = 0; // 처음 단계는 0부터 시작
 
     function advance() {
       const box = document.getElementById("messageBox");
-
       box.style.opacity = 0;
 
       setTimeout(() => {
-        step++;
+        step++; // 단계 증가
 
         if (step === 1) {
-          box.textContent = "너의 운명의 별을 따다주러 왔어";
+          box.textContent = "너의 운명의 별을 따다주러 왔어.";
         } else if (step === 2) {
           box.textContent = "나 별난별과 함께 떠나볼까?";
         } else if (step === 3) {
-          handleClick('next');
+          // 마지막 단계에서만 페이지 이동
+          window.location.href = "https://kimjiwoow.github.io/write-/"; // 실제 링크로 수정
           return;
         }
 
-        box.style.opacity = 1;
-      }, 300);
+        box.style.opacity = 1; // 텍스트 변경 후 opacity 복원
+      }, 300); // 애니메이션 시간
+    }
+
+    function skip() {
+      // SKIP 버튼 클릭 시 바로 페이지로 이동
+      window.location.href = "https://kimjiwoow.github.io/write-/"; // 실제 링크로 수정
     }
   </script>
 </body>
 </html>
+
+
