@@ -2,169 +2,212 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>운명의 별을 따다 줄게</title>
+  <title>별난별 타로카드</title>
   <style>
-    body {
+    html, body {
+      height: 100%;
       margin: 0;
       padding: 0;
-      background-color: #e9dbf2;
-      font-family: 'Pretendard', sans-serif;
-      height: 100vh;
+      background: linear-gradient(120deg, #2d1b69 0%, #e9dbf2 100%);
+      font-family: 'Arial', sans-serif;
+    }
+    body {
       display: flex;
-      align-items: center;
       justify-content: center;
+      align-items: center;
+      text-align: center;
+      flex-direction: column;
     }
     .container {
-      position: relative;
+      max-width: 900px;
       width: 100%;
-      max-width: 600px;
-      height: 100%;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    h1 {
+      color: white;
+      margin-bottom: 30px;
+    }
+    .tarot-container {
       display: flex;
-      flex-direction: column;
+      justify-content: center;
+      gap: 20px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+    }
+    .card {
+      width: 200px;
+      height: 300px;
+      perspective: 1000px;
+      cursor: pointer;
+    }
+    .card-inner {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.6s;
+    }
+    .card.flipped .card-inner {
+      transform: rotateY(180deg);
+    }
+    .card-front, .card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .card-front img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .card-back {
+      background-color: #2d2a4a;
+      color: white;
+      display: flex;
       justify-content: center;
       align-items: center;
-      padding: 30px;
-    }
-    .character-image {
-      width: 290px;
-      height: auto;
-      margin-bottom: 2px;
-    }
-    .text-box {
-      background-color: #fff;
-      border-radius: 30px;
-      padding: 20px 32px;
-      font-size: 18px;
-      color: #333;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      margin-bottom: 50px;
+      padding: 16px;
+      font-size: 12.5px;
+      line-height: 1.4;
+      white-space: pre-line;
+      box-sizing: border-box;
+      transform: rotateY(180deg) scale(0.95);
       text-align: center;
+      box-shadow: 0 0 20px 8px rgba(255, 255, 255, 0.2), 0 0 30px 14px rgba(255, 255, 255, 0.1) inset;
     }
-    .btn-skip {
-      position: absolute;
-      left: 80px;
-      bottom: 180px;
-      background: none;
-      border: none;
-      color: #7265a1;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      padding: 8px 20px;
-      min-width: 72px;
+    .buttons {
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
     }
-    .btn-skip:hover {
-      opacity: 0.8;
-    }
-    .btn-next {
-      position: absolute;
-      right: 80px;
-      bottom: 180px;
-      background-color: #2d1b69;
-      color: white;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      padding: 8px 20px;
+    .sub-button {
+      background-color: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      padding: 10px 20px;
       border-radius: 25px;
-      min-width: 72px;
-      border: none;
+      font-size: 14px;
+      cursor: pointer;
+      backdrop-filter: blur(6px);
+      transition: all 0.3s ease;
     }
-    .btn-next:hover {
-      opacity: 0.9;
+    .sub-button:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+      box-shadow: 0 0 10px 3px #fff;
+      transform: translateY(-1px);
+    }
+    #shareCanvas {
+      position: absolute;
+      left: -9999px;
+      top: -9999px;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <img class="character-image" src="https://i.imgur.com/YgP1zqJ.png" alt="별난별이">
-    <div id="messageBox" class="text-box">안녕~ 나는 별나라에서 온 별난별이야.</div>
-    
-    <!-- 왼쪽: SKIP 버튼 -->
-    <button class="btn-skip" onclick="skip()">SKIP</button>
-    
-    <!-- 오른쪽: 다음 버튼 -->
-    <button id="nextBtn" class="btn-next" onclick="advance()">다음</button>
+    <h1>✨ 별난별 타로카드 ✨</h1>
+    <div class="tarot-container">
+      <div class="card" onclick="flipCard(this, '카드1')" data-message="새로운 인연이 다가옵니다. 마음을 열고 기다려보세요." data-image="https://i.imgur.com/HRZrNvm.png">
+        <div class="card-inner">
+          <div class="card-front"><img src="https://i.imgur.com/HRZrNvm.png" alt="카드1 앞면"></div>
+          <div class="card-back">새로운 인연이 다가옵니다.<br>마음을 열고 기다려보세요.</div>
+        </div>
+      </div>
+      <div class="card" onclick="flipCard(this, '카드2')" data-message="행운지수가 상승하였습니다! 예상치 못했던 수입이 들어올 수도 있습니다." data-image="https://i.imgur.com/NMbruAt.png">
+        <div class="card-inner">
+          <div class="card-front"><img src="https://i.imgur.com/NMbruAt.png" alt="카드2 앞면"></div>
+          <div class="card-back">행운지수가 상승하였습니다!<br>예상치 못했던 수입이 들어올 수도 있습니다.</div>
+        </div>
+      </div>
+      <div class="card" onclick="flipCard(this, '카드3')" data-message="발 밑만 보며 걷다보면 예상치 못한 길로 갈 수 있습니다. 멀리 보고 진행하시길!" data-image="https://i.imgur.com/OZB4t3N.png">
+        <div class="card-inner">
+          <div class="card-front"><img src="https://i.imgur.com/OZB4t3N.png" alt="카드3 앞면"></div>
+          <div class="card-back">발 밑만 보며 걷다보면 예상치 못한 길로 갈 수 있습니다.<br>멀리 보고 진행하시길!</div>
+        </div>
+      </div>
+    </div>
+    <div class="buttons">
+      <button class="sub-button" onclick="goToStart()">🏠 처음으로</button>
+      <button class="sub-button" onclick="sharePage()">📤 공유하기</button>
+    </div>
   </div>
-  
+  <canvas id="shareCanvas" width="600" height="900"></canvas>
   <script>
-    // 세션 ID 생성 (페이지 로드 시 한 번만)
-    const sessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-    
-    // Google Apps Script 배포 URL
-    const GAS_URL = 'https://script.google.com/macros/s/AKfycbwOHXIVYOCOj6_ZZOMcHitkIZqrjtZIJYQqrldajjiRoq8fHV_feS1cxKWRxwE8WOY_YQ/exec';
-    
-    let step = 0; // 처음 단계는 0부터 시작
-    
-    // 로그 전송 함수
-    function sendLog(action) {
-      const now = new Date();
+    const GAS_URL = 'https://script.google.com/macros/s/AKfycbxtMKTALtx6IWOwsuy9q2TmKRCH3A61xWsaYbkT9OuTEjb9tCraWr5mfnq_slLgxIt29Q/exec';
+    let selectedCard = null;
+    let hasSelectedCard = false;
+    let selectedCardName = '';
+
+    function sendBehaviorLog(action) {
       const logData = {
-        introLog: {
-          date: now.toLocaleDateString('ko-KR'),
-          time: now.toLocaleTimeString('ko-KR'),
-          sessionId: sessionId,
-          action: action
-        }
+        action: action,
+        hasSelectedCard: hasSelectedCard,
+        selectedCard: selectedCardName
       };
-      
-      // 비동기로 로그 전송 (페이지 이동을 방해하지 않도록)
-      fetch(GAS_URL, {
-        method: 'POST',
-        mode: 'no-cors', // CORS 우회
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(logData)
-      }).catch(error => {
-        console.log('로그 전송 실패:', error);
+
+      if (navigator.sendBeacon) {
+        const blob = new Blob([JSON.stringify(logData)], { type: 'application/json' });
+        navigator.sendBeacon(GAS_URL, blob);
+      } else {
+        fetch(GAS_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(logData)
+        }).catch(error => {
+          console.log('로그 전송 실패:', error);
+        });
+      }
+    }
+
+    function flipCard(card, cardName) {
+      if (!selectedCard) {
+        card.classList.toggle('flipped');
+        selectedCard = card;
+        hasSelectedCard = true;
+        selectedCardName = cardName;
+        disableOtherCards(card);
+        sendBehaviorLog('카드_선택');
+      } else if (card === selectedCard) {
+        card.classList.toggle('flipped');
+      } else {
+        alert("하루에 한 번만 뽑을 수 있습니다!\n다시 뽑고 싶으시다면, 처음으로 버튼을 클릭해주세요!");
+      }
+    }
+
+    function disableOtherCards(exceptCard) {
+      document.querySelectorAll('.card').forEach(card => {
+        if (card !== exceptCard) {
+          card.onclick = () => alert("하루에 한 번만 뽑을 수 있습니다.\n다시 뽑고 싶으시다면, 처음으로 버튼을 클릭해주세요!");
+        }
       });
     }
-    
-    // 페이지 로드 시 로그
-    window.addEventListener('load', function() {
-      sendLog('페이지_로드');
-    });
-    
-    function advance() {
-      const box = document.getElementById("messageBox");
-      box.style.opacity = 0;
-      
+
+    function goToStart() {
+      sendBehaviorLog('처음으로_버튼_클릭');
       setTimeout(() => {
-        step++; // 단계 증가
-        
-        if (step === 1) {
-          box.textContent = "너의 운명의 별을 따다주러 왔어.";
-          sendLog('다음_버튼_클릭_1단계');
-        } else if (step === 2) {
-          box.textContent = "나 별난별과 함께 떠나볼까?";
-          sendLog('다음_버튼_클릭_2단계');
-        } else if (step === 3) {
-          // 마지막 단계에서만 페이지 이동
-          sendLog('다음_버튼_클릭_완료_후_이동');
-          setTimeout(() => {
-            window.location.href = "https://kimjiwoow.github.io/write-/";
-          }, 100); // 로그 전송 시간 확보
-          return;
-        }
-        
-        box.style.opacity = 1; // 텍스트 변경 후 opacity 복원
-      }, 300); // 애니메이션 시간
+        window.location.href = "https://kimjiwoow.github.io/-/";
+      }, 500);
     }
-    
-    function skip() {
-      // SKIP 버튼 클릭 시 바로 페이지로 이동
-      sendLog('SKIP_버튼_클릭');
-      setTimeout(() => {
-        window.location.href = "https://kimjiwoow.github.io/write-/";
-      }, 100); // 로그 전송 시간 확보
+
+    function sharePage() {
+      if (!selectedCardName) {
+        alert('먼저 카드를 뽑아주세요!');
+        return;
+      }
+      sendBehaviorLog('공유하기_버튼_클릭');
+      alert('운세 내용이 클립보드에 복사되었거나, 공유 가능합니다!');
     }
-    
-    // 페이지 떠날 때 로그 (페이지 닫기, 새로고침 등)
-    window.addEventListener('beforeunload', function() {
-      sendLog('페이지_종료');
+
+    document.addEventListener('DOMContentLoaded', () => sendBehaviorLog('페이지_방문'));
+    window.addEventListener('beforeunload', () => {
+      sendBehaviorLog(hasSelectedCard ? '카드선택후_이탈' : '카드선택없이_이탈');
     });
   </script>
 </body>
