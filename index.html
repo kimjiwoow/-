@@ -157,7 +157,7 @@
         hasSelectedCard = true;
         selectedCardName = cardName;
         disableOtherCards(card);
-        sendBehaviorLog('카드_선택');
+        // sendBehaviorLog('카드_선택'); // 로그 전송 비활성화
       } else if (card === selectedCard) {
         card.classList.toggle('flipped');
       } else {
@@ -174,10 +174,8 @@
     }
 
     function goToStart() {
-      sendBehaviorLog('처음으로_버튼_클릭');
-      setTimeout(() => {
-        window.location.href = "https://kimjiwoow.github.io/-/";
-      }, 500);
+      // sendBehaviorLog('처음으로_버튼_클릭'); // 로그 전송 비활성화
+      window.location.href = "https://kimjiwoow.github.io/-/";
     }
 
     function sharePage() {
@@ -185,7 +183,7 @@
         alert('먼저 카드를 뽑아주세요!');
         return;
       }
-      sendBehaviorLog('공유하기_버튼_클릭');
+      // sendBehaviorLog('공유하기_버튼_클릭'); // 로그 전송 비활성화
       
       // 선택된 카드의 메시지 가져오기
       const message = selectedCard.getAttribute('data-message');
@@ -205,12 +203,12 @@
 
     // 페이지 로드 시 로그 전송
     document.addEventListener('DOMContentLoaded', () => {
-      sendBehaviorLog('페이지_방문');
+      // sendBehaviorLog('페이지_방문'); // 로그 전송 비활성화
     });
 
     // 페이지 이탈 시 로그 전송
     window.addEventListener('beforeunload', () => {
-      sendBehaviorLog(hasSelectedCard ? '카드선택후_이탈' : '카드선택없이_이탈');
+      // sendBehaviorLog(hasSelectedCard ? '카드선택후_이탈' : '카드선택없이_이탈'); // 로그 전송 비활성화
     });
   </script>
 </body>
