@@ -416,11 +416,40 @@
       }
     });
 
-    // 로그 전송 함수 (일시적으로 비활성화)
+    // 안전한 로그 전송 함수
     async function sendBehaviorLog(action) {
-      // 로그 전송 기능을 일시적으로 비활성화
-      // GAS 설정 완료 후 다시 활성화 예정
-      console.log('로그 (비활성화):', action);
+      const logData = {
+        action: action,
+        hasSelectedCard: hasSelectedCard,
+        selectedCard: selectedCardName,
+        timestamp: new Date().toISOString(),
+        userAgent: navigator.userAgent
+      };
+      
+      try {
+        // sendBeacon을 우선 사용 (가장 안전)
+        if (navigator.sendBeacon) {
+          const blob = new Blob([JSON.stringify(logData)], { type: 'application/json' });
+          const result = navigator.sendBeacon(BEHAVIOR_LOG_URL, blob);
+          if (result) {
+            console.log('로그 전송 성공 (sendBeacon)');
+            return;
+          }
+        }
+        
+        // sendBeacon 실패 시 fetch 시도
+        await fetch(BEHAVIOR_LOG_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(logData)
+        });
+        console.log('로그 전송 완료 (fetch)');
+        
+      } catch (error) {
+        // 에러가 발생해도 조용히 처리하고 다른 기능에 영향 없음
+        console.log('로그 전송 실패 (무시됨):', error.message);
+      }
     }
   </script>
 </body>
