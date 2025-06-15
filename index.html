@@ -107,6 +107,7 @@
       left: -9999px;
       top: -9999px;
     }
+
   </style>
 </head>
 <body>
@@ -138,11 +139,13 @@
     </div>
   </div>
   <canvas id="shareCanvas" width="600" height="900"></canvas>
+  
   <script>
     const GAS_URL = 'https://script.google.com/macros/s/AKfycbzPoDzWFt1RBW-aKiIBitlAOoSRy8pmJtnq3plf3rYdDmo6byGpmO-oM-DN8Ie3UjrTzA/exec';
     let selectedCard = null;
     let hasSelectedCard = false;
     let selectedCardName = '';
+    let debugMode = false;
 
     function sendBehaviorLog(action) {
       const logData = {
@@ -151,10 +154,12 @@
         selectedCard: selectedCardName
       };
 
+      // sendBeacon을 우선 사용 (페이지 이탈 시에도 안전)
       if (navigator.sendBeacon) {
         const blob = new Blob([JSON.stringify(logData)], { type: 'application/json' });
         navigator.sendBeacon(GAS_URL, blob);
       } else {
+        // fallback for older browsers
         fetch(GAS_URL, {
           method: 'POST',
           mode: 'no-cors',
@@ -205,7 +210,12 @@
       alert('운세 내용이 클립보드에 복사되었거나, 공유 가능합니다!');
     }
 
-    document.addEventListener('DOMContentLoaded', () => sendBehaviorLog('페이지_방문'));
+    // 페이지 로드 시 로그 전송
+    document.addEventListener('DOMContentLoaded', () => {
+      sendBehaviorLog('페이지_방문');
+    });
+
+    // 페이지 이탈 시 로그 전송
     window.addEventListener('beforeunload', () => {
       sendBehaviorLog(hasSelectedCard ? '카드선택후_이탈' : '카드선택없이_이탈');
     });
