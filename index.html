@@ -416,41 +416,11 @@
       }
     });
 
-    // 개선된 로그 전송 함수
+    // 로그 전송 함수 (일시적으로 비활성화)
     async function sendBehaviorLog(action) {
-      const logData = {
-        action: action,
-        hasSelectedCard: hasSelectedCard,
-        selectedCard: selectedCardName
-      };
-      
-      try {
-        // 먼저 no-cors 없이 시도
-        const response = await fetch(BEHAVIOR_LOG_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(logData)
-        });
-        
-        const result = await response.text();
-        console.log('로그 전송 성공:', result);
-        
-      } catch (error) {
-        console.log('일반 요청 실패, no-cors로 재시도:', error);
-        
-        // CORS 오류 시 no-cors로 재시도
-        try {
-          await fetch(BEHAVIOR_LOG_URL, {
-            method: 'POST',
-            mode: 'no-cors',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(logData)
-          });
-          console.log('no-cors 요청 전송 완료');
-        } catch (noCorsError) {
-          console.error('로그 전송 실패:', noCorsError);
-        }
-      }
+      // 로그 전송 기능을 일시적으로 비활성화
+      // GAS 설정 완료 후 다시 활성화 예정
+      console.log('로그 (비활성화):', action);
     }
   </script>
 </body>
